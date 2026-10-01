@@ -4,6 +4,7 @@ import kz.iitu.springlab02.audit.Audited;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import kz.iitu.springlab02.audit.Measured;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -14,7 +15,7 @@ public class CatalogService {
     @Autowired
     @Lazy
     private CatalogService self;
-
+    @Measured
     public String findById(long id) {
         sleep(50);
         return "Item no. " + id;

@@ -1,5 +1,6 @@
 package kz.iitu.springlab02.web;
 
+import kz.iitu.springlab02.aspect.MetricsAspect;
 import kz.iitu.springlab02.service.CatalogService;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,11 @@ import java.util.Map;
 public class CatalogController {
 
     private final CatalogService catalogService;
+    private final MetricsAspect metricsAspect;
 
-    public CatalogController(CatalogService catalogService) {
+    public CatalogController(CatalogService catalogService, MetricsAspect metricsAspect) {
         this.catalogService = catalogService;
+        this.metricsAspect = metricsAspect;
     }
 
     @GetMapping("/item/{id}")
@@ -37,6 +40,11 @@ public class CatalogController {
         return catalogService.removeTwice(id);
     }
 
+    @GetMapping("/remove-twice-fixed/{id}")
+    public String removeTwiceFixed(@PathVariable long id) {
+        return catalogService.removeTwiceFixed(id);
+    }
+
     @GetMapping("/proxy")
     public Map<String, String> proxyInfo() {
         Class<?> clazz = catalogService.getClass();
@@ -48,8 +56,8 @@ public class CatalogController {
         );
     }
 
-    @GetMapping("/remove-twice-fixed/{id}")
-    public String removeTwiceFixed(@PathVariable long id) {
-        return catalogService.removeTwiceFixed(id);
+    @GetMapping("/metrics")
+    public Map<String, Map<String, Long>> metrics() {
+        return metricsAspect.snapshot();
     }
 }

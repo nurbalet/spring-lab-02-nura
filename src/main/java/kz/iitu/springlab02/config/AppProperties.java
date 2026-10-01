@@ -19,7 +19,10 @@ public record AppProperties(
         String group,
 
         @Valid
-        Mail mail
+        Mail mail,
+
+        @Valid
+        Security security
 ) {
 
     public record Mail(
@@ -35,5 +38,15 @@ public record AppProperties(
 
             @DefaultValue("true")
             boolean enabled
+    ) {}
+
+    public record Security(
+            @NotNull
+            @DefaultValue("30m")
+            Duration tokenTtl,
+
+            @Min(8)
+            @DefaultValue("8")
+            int minPasswordLength
     ) {}
 }

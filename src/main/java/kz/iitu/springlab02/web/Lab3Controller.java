@@ -35,6 +35,10 @@ public class Lab3Controller {
         result.put("serverPort", environment.getProperty("server.port"));
         result.put("activeProfiles", Arrays.asList(environment.getActiveProfiles()));
         result.put("banner", banner.describe());
+
+        result.put("securityTokenTtl", props.security().tokenTtl().toString());
+        result.put("securityMinPasswordLength", props.security().minPasswordLength());
+
         return result;
     }
 }

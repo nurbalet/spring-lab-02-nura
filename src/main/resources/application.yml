@@ -13,6 +13,9 @@ app:
     retry-count: 3
     timeout: 5s
     enabled: true
+  security:
+    token-ttl: 30m
+    min-password-length: 8
 
 logging:
   level:

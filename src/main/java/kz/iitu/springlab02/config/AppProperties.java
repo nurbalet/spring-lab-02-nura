@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Duration;
 
 @Validated
-@ConfigurationProperties(prefix = "app")
+@ConfigurationProperties(prefix = "app.css")
 public record AppProperties(
 
         @NotBlank

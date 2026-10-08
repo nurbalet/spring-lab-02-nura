@@ -28,6 +28,21 @@ public class BookPageController {
         return "books/list";
     }
 
+    @GetMapping("/{id}")
+    public String detail(@PathVariable long id, Model model) {
+        return service.findById(id)
+                .map(book -> {
+                    model.addAttribute("book", book);
+                    model.addAttribute("title", "Book details");
+                    return "books/detail";
+                })
+                .orElseGet(() -> {
+                    model.addAttribute("id", id);
+                    model.addAttribute("title", "Not found");
+                    return "books/not-found";
+                });
+    }
+
     @PostMapping
     public String create(
             @RequestParam String title,

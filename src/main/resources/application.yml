@@ -17,6 +17,17 @@ app:
     token-ttl: 30m
     min-password-length: 8
 
+  app:
+  css:
+    owner: "nura"
+    group: "RWPSF 3305"
+    mail:
+      host: "localhost"
+      port: 25
+      username: "test"
+    security:
+      enabled: false
+
 logging:
   level:
     kz.iitu: INFO

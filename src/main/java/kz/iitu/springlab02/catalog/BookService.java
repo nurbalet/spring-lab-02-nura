@@ -18,8 +18,9 @@ public class BookService {
         if (author == null || author.isBlank()) {
             return repository.findAll();
         }
+        String needle = author.toLowerCase();
         return repository.findAll().stream()
-                .filter(b -> b.author().equalsIgnoreCase(author))
+                .filter(b -> b.author().toLowerCase().contains(needle))
                 .toList();
     }
 

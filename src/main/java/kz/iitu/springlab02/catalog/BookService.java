@@ -28,14 +28,20 @@ public class BookService {
         return repository.findById(id);
     }
 
+    public Book getById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(id));
+    }
+
     public Book create(Book book) {
-        return repository.save(new Book(null, book.title(), book.author(), book.year()));
+        return repository.save(new Book(null, book.title(), book.author(),
+                book.year(), book.genre()));
     }
 
     public Optional<Book> replace(Long id, Book book) {
         return repository.findById(id)
                 .map(existing -> repository.save(
-                        new Book(id, book.title(), book.author(), book.year())
+                        new Book(id, book.title(), book.author(), book.year(), book.genre())
                 ));
     }
 

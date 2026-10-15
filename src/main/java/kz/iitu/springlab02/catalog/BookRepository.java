@@ -15,9 +15,9 @@ public class BookRepository {
     private final AtomicLong sequence = new AtomicLong();
 
     public BookRepository() {
-        save(new Book(null, "Effective Java", "Joshua Bloch", 2018));
-        save(new Book(null, "Clean Code", "Robert Martin", 2008));
-        save(new Book(null, "Spring in Action", "Craig Walls", 2022));
+        save(new Book(null, "Effective Java", "Joshua Bloch", 2018, Genre.NON_FICTION));
+        save(new Book(null, "Clean Code", "Robert Martin", 2008, Genre.NON_FICTION));
+        save(new Book(null, "Spring in Action", "Craig Walls", 2022, Genre.NON_FICTION));
     }
 
     public List<Book> findAll() {
@@ -30,7 +30,7 @@ public class BookRepository {
 
     public Book save(Book book) {
         long id = book.id() != null ? book.id() : sequence.incrementAndGet();
-        Book stored = new Book(id, book.title(), book.author(), book.year());
+        Book stored = new Book(id, book.title(), book.author(), book.year(), book.genre());
         storage.put(id, stored);
         return stored;
     }

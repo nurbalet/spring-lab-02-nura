@@ -1,16 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${title}">Not found</title>
+    <title>Not found</title>
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-
-<h1>Book not found</h1>
-<p>No book with id <span th:text="${id}">999</span>.</p>
-
-<p><a th:href="@{/books}">Back to catalogue</a></p>
-
+<h1>Not found</h1>
+<p th:text="${message}">Book not found</p>
+<a th:href="@{/books}">Back to books</a>
 </body>
 </html>

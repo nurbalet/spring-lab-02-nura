@@ -32,3 +32,12 @@ input, button { padding: .45rem .6rem; }
     color: #0a7a3d;
     font-weight: bold;
 }
+.is-invalid { border: 1px solid #c0392b; }
+.error { color: #c0392b; font-size: 0.9em; display: block; width: 100%; }
+.alert { background: #fdecea; border: 1px solid #c0392b; padding: .5rem 1rem; margin-bottom: 1rem; }
+
+form {
+    display: flex;
+    gap: .5rem;
+    flex-wrap: wrap;
+}

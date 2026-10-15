@@ -1,6 +1,9 @@
 spring:
   application:
     name: spring-lab
+  messages:
+    encoding: UTF-8
+    basename: messages
 
 server:
   port: 8080
@@ -16,8 +19,6 @@ app:
   security:
     token-ttl: 30m
     min-password-length: 8
-
-  app:
   css:
     owner: "nura"
     group: "RWPSF 3305"

@@ -46,6 +46,22 @@ public class BookPageController {
         return "books/detail";
     }
 
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable long id, Model model) {
+        Book book = service.getById(id);
+
+        BookForm form = new BookForm();
+        form.setId(book.id());
+        form.setTitle(book.title());
+        form.setAuthor(book.author());
+        form.setYear(book.year());
+        form.setGenre(book.genre());
+
+        model.addAttribute("form", form);
+        model.addAttribute("genres", Genre.values());
+        return "books/form";
+    }
+
     @PostMapping
     public String create(
             @Valid @ModelAttribute("form") BookForm form,
@@ -63,10 +79,37 @@ public class BookPageController {
                 form.getTitle(),
                 form.getAuthor(),
                 form.getYear(),
-                form.getGenre()
+                form.getGenre(),
+                null
         ));
 
         redirect.addFlashAttribute("message", "Book " + saved.title() + " has been added");
+        return "redirect:/books";
+    }
+
+    @PostMapping("/{id}")
+    public String update(
+            @PathVariable long id,
+            @Valid @ModelAttribute("form") BookForm form,
+            BindingResult binding,
+            Model model,
+            RedirectAttributes redirect
+    ) {
+        if (binding.hasErrors()) {
+            model.addAttribute("genres", Genre.values());
+            return "books/form";
+        }
+
+        service.update(id, new Book(
+                id,
+                form.getTitle(),
+                form.getAuthor(),
+                form.getYear(),
+                form.getGenre(),
+                null
+        ));
+
+        redirect.addFlashAttribute("message", "Book " + form.getTitle() + " has been updated");
         return "redirect:/books";
     }
 }

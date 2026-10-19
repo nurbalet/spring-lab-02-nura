@@ -6,6 +6,8 @@ import kz.iitu.springlab02.validation.NoDigits;
 
 public class BookForm {
 
+    private Long id;
+
     @NotBlank(message = "{book.title.required}")
     @Size(max = 120, message = "{book.title.size}")
     private String title;
@@ -16,12 +18,15 @@ public class BookForm {
 
     @Min(value = 1450, message = "{book.year.range}")
     @Max(value = 2100, message = "{book.year.range}")
-    private Integer year;
+    private int year;
 
     @NotNull(message = "{book.genre.required}")
     private Genre genre;
 
     private boolean available;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -29,8 +34,8 @@ public class BookForm {
     public String getAuthor() { return author; }
     public void setAuthor(String author) { this.author = author; }
 
-    public Integer getYear() { return year; }
-    public void setYear(Integer year) { this.year = year; }
+    public int getYear() { return year; }
+    public void setYear(int year) { this.year = year; }
 
     public Genre getGenre() { return genre; }
     public void setGenre(Genre genre) { this.genre = genre; }

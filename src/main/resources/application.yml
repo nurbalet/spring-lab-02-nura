@@ -41,3 +41,8 @@ management:
   endpoint:
     env:
       show-values: always
+
+  spring:
+  mvc:
+    problemdetails:
+      enabled: true

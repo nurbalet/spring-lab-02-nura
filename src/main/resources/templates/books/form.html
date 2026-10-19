@@ -6,9 +6,10 @@
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1 th:text="#{book.new}">New book</h1>
+<h1 th:text="${form.id == null} ? #{book.new} : #{book.edit}">New book</h1>
 
-<form th:action="@{/books}" th:object="${form}" method="post">
+<form th:action="${form.id == null} ? @{/books} : @{/books/{id}(id=${form.id})}"
+      th:object="${form}" method="post">
 
     <div class="alert" th:if="${#fields.hasAnyErrors()}">
         <ul>
@@ -40,7 +41,8 @@
         <span th:text="#{book.available}">Available</span>
     </label>
 
-    <button type="submit" th:text="#{form.submit}">Save</button>
+    <button type="submit"
+            th:text="${form.id == null} ? #{form.submit} : #{form.update}">Save</button>
 </form>
 
 <div>

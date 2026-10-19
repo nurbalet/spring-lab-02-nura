@@ -15,7 +15,7 @@
 
 <table>
     <thead>
-    <tr><th>#</th><th>Title</th><th>Author</th><th>Year</th></tr>
+    <tr><th>#</th><th>Title</th><th>Author</th><th>Year</th><th></th></tr>
     </thead>
     <tbody>
     <tr th:each="book : ${books}">
@@ -23,6 +23,7 @@
         <td th:text="${book.title}">Title</td>
         <td th:text="${book.author}">Author</td>
         <td th:text="${book.year}">2020</td>
+        <td><a th:href="@{/books/{id}/edit(id=${book.id})}" th:text="#{book.edit}">Edit</a></td>
     </tr>
     </tbody>
 </table>

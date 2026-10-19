@@ -6,15 +6,17 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import kz.iitu.springlab02.catalog.DuplicateTitleException;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(BookNotFoundException.class)
-    public ProblemDetail handleNotFoundException(BookNotFoundException ex) {
+    @ExceptionHandler(DuplicateTitleException.class)
+    public ProblemDetail handleDuplicate(DuplicateTitleException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
-                HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setTitle("Book not found");
+                HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Duplicate title");
+        problem.setProperty("title", ex.getTitle());
         return problem;
     }
 }

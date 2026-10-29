@@ -2,6 +2,7 @@ package kz.iitu.springlab02.web;
 
 import kz.iitu.springlab02.catalog.BookNotFoundException;
 import kz.iitu.springlab02.catalog.DuplicateTitleException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice(annotations = RestController.class)
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Обработка 404 Not Found
+    // 404 Not Found
     @ExceptionHandler(BookNotFoundException.class)
     public ProblemDetail handleNotFoundException(BookNotFoundException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
@@ -30,7 +31,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
-    // Обработка 409 Conflict
+    // 409 Conflict (Дубликат названия)
     @ExceptionHandler(DuplicateTitleException.class)
     public ProblemDetail handleDuplicate(DuplicateTitleException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
@@ -40,7 +41,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
-    // Обработка 400 Bad Request (Ошибки валидации @Valid)
+    // 409 Conflict (Индивидуальный вариант 4: Оптимистичная блокировка)
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ProblemDetail handleOptimisticLocking(OptimisticLockingFailureException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                "The book was updated by another user. Please reload the page and try again."
+        );
+        problem.setTitle("Optimistic Locking Conflict");
+        return problem;
+    }
+
+    // 400 Bad Request (Ошибки валидации @Valid)
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -52,7 +64,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatusCode.valueOf(400), "Validation failed for one or more fields.");
         problem.setTitle("Invalid request content");
 
-        // Собираем ошибки полей в Map: {"title": "The title must not be empty"}
         Map<String, String> errors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,

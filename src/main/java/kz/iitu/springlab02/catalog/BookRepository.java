@@ -1,46 +1,32 @@
 package kz.iitu.springlab02.catalog;
 
-import org.springframework.stereotype.Repository;
-
-import java.time.Instant;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
-public class BookRepository {
+public interface BookRepository extends JpaRepository<Book, Long> {
+    List<Book> findByGenre(Genre genre);
+    List<Book> findByTitleContainingIgnoreCase(String fragment);
+    List<Book> findByYearBetweenOrderByYearDesc(int from, int to);
+    List<Book> findTop3ByGenreOrderByYearDesc(Genre genre);
+    long countByAuthorName(String name);
 
-    private final Map<Long, Book> storage = new ConcurrentHashMap<>();
-    private final AtomicLong sequence = new AtomicLong();
+    @Query("select b from Book b where b.genre = :genre and b.year = :year order by b.title")
+    List<Book> search(@Param("genre") Genre genre, @Param("year") int year);
 
-    public BookRepository() {
-        save(new Book(null, "Effective Java", "Joshua Bloch", 2018, Genre.NON_FICTION, Instant.now()));
-        save(new Book(null, "Clean Code", "Robert Martin", 2008, Genre.NON_FICTION, Instant.now()));
-        save(new Book(null, "Spring in Action", "Craig Walls", 2022, Genre.NON_FICTION, Instant.now()));
-    }
+    @Modifying(clearAutomatically = true)
+    @Query("update Book b set b.archived = true where b.year < :year")
+    int archiveOlderThan(@Param("year") int year);
 
-    public List<Book> findAll() {
-        return List.copyOf(storage.values());
-    }
+    @Query("select b from Book b join fetch b.author")
+    List<Book> findAllWithAuthor();
 
-    public Optional<Book> findById(Long id) {
-        return Optional.ofNullable(storage.get(id));
-    }
-
-    public Book save(Book book) {
-        long id = book.id() != null ? book.id() : sequence.incrementAndGet();
-
-        Instant createdAt = book.createdAt() != null ? book.createdAt() : Instant.now();
-
-        Book stored = new Book(id, book.title(), book.author(), book.year(), book.genre(), createdAt);
-
-        storage.put(id, stored);
-        return stored;
-    }
-
-    public boolean deleteById(Long id) {
-        return storage.remove(id) != null;
-    }
+    @Override
+    @EntityGraph(attributePaths = {"author"})
+    Page<Book> findAll(Pageable pageable);
 }

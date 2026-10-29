@@ -2,6 +2,8 @@ package kz.iitu.springlab02.web.dto;
 
 import kz.iitu.springlab02.catalog.Genre;
 import java.time.Instant;
+import kz.iitu.springlab02.catalog.Genre;
+import java.time.Instant;
 
 public record BookResponse(
         Long id,

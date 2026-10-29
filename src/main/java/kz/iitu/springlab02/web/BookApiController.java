@@ -14,12 +14,14 @@ import kz.iitu.springlab02.catalog.BookService;
 import kz.iitu.springlab02.web.dto.BookMapper;
 import kz.iitu.springlab02.web.dto.BookRequest;
 import kz.iitu.springlab02.web.dto.BookResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @Tag(name = "Books", description = "The catalogue of books")
 @RestController
@@ -35,8 +37,9 @@ public class BookApiController {
     }
 
     @GetMapping
-    public List<BookResponse> list(@RequestParam(required = false) String author) {
-        return mapper.toResponseList(service.findAll(author));
+    public Page<BookResponse> list(
+            @PageableDefault(size = 5, sort = "title") Pageable pageable) {
+        return service.findPage(pageable).map(mapper::toResponse);
     }
 
     @Operation(summary = "Find a book by its identifier")
@@ -64,7 +67,7 @@ public class BookApiController {
     public ResponseEntity<BookResponse> create(@Valid @RequestBody BookRequest request) {
         Book saved = service.create(mapper.toDomain(request));
         return ResponseEntity
-                .created(URI.create("/api/books/" + saved.id()))
+                .created(URI.create("/api/books/" + saved.getId()))
                 .body(mapper.toResponse(saved));
     }
 
@@ -78,5 +81,11 @@ public class BookApiController {
     public ResponseEntity<Void> delete(@PathVariable long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/simulate-lock")
+    public String simulateLock(@PathVariable Long id) {
+        service.simulateLock(id);
+        return "Lock test passed (no conflict)";
     }
 }

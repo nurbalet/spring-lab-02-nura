@@ -9,9 +9,14 @@ import java.util.List;
 public interface BookMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "tags", ignore = true)
+    @Mapping(target = "archived", ignore = true)
+    @Mapping(target = "version", ignore = true)
     Book toDomain(BookRequest request);
 
+    @Mapping(target = "author", source = "author.name")
     BookResponse toResponse(Book book);
 
     List<BookResponse> toResponseList(List<Book> books);

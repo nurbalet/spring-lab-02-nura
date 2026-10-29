@@ -1,0 +1,47 @@
+package kz.iitu.springlab02.catalog;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "accounts")
+public class Account {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "owner_name", nullable = false)
+    private String ownerName;
+
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance;
+
+    @Version
+    private Long version;
+
+    protected Account() {}
+
+    // Геттеры
+    public Long getId() { return id; }
+    public String getOwnerName() { return ownerName; }
+    public BigDecimal getBalance() { return balance; }
+    public Long getVersion() { return version; }
+
+    // Доменные методы
+    public void debit(BigDecimal amount) {
+        if (amount.signum() <= 0) throw new IllegalArgumentException("Amount must be positive");
+        if (balance.compareTo(amount) < 0) throw new IllegalStateException("Insufficient funds");
+        balance = balance.subtract(amount);
+    }
+
+    public void credit(BigDecimal amount) {
+        if (amount.signum() <= 0) throw new IllegalArgumentException("Amount must be positive");
+        balance = balance.add(amount);
+    }
+
+    public Account(String ownerName, BigDecimal balance) {
+        this.ownerName = ownerName;
+        this.balance = balance;
+    }
+}

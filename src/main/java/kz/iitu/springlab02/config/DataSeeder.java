@@ -1,15 +1,11 @@
 package kz.iitu.springlab02.config;
 
-import kz.iitu.springlab02.catalog.Author;
-import kz.iitu.springlab02.catalog.AuthorRepository;
-import kz.iitu.springlab02.catalog.Book;
-import kz.iitu.springlab02.catalog.Genre;
-import kz.iitu.springlab02.catalog.Tag;
-import kz.iitu.springlab02.catalog.TagRepository;
+import kz.iitu.springlab02.catalog.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Component
@@ -18,14 +14,25 @@ public class DataSeeder implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final TagRepository tagRepository;
+    private final AccountRepository accountRepository;
 
-    public DataSeeder(AuthorRepository authorRepository, TagRepository tagRepository) {
+    public DataSeeder(AuthorRepository authorRepository,
+                      TagRepository tagRepository,
+                      AccountRepository accountRepository) {
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public void run(String... args) {
+        // 1. Заполняем счета (для Лабы 9)
+        if (accountRepository.count() == 0) {
+            accountRepository.save(new Account("Alice", new BigDecimal("1000.00")));
+            accountRepository.save(new Account("Bob", new BigDecimal("500.00")));
+        }
+
+        // 2. Заполняем книги (из Лабы 8)
         if (authorRepository.count() > 0) return;
 
         Tag classic = tagRepository.save(new Tag("Classic"));

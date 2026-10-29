@@ -5,13 +5,12 @@ spring:
     password: springlab
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     open-in-view: false
-    properties:
-      hibernate:
-        format_sql: true
-
+  mvc:
+    problemdetails:
+      enabled: true
   messages:
     encoding: UTF-8
     basename: messages
@@ -52,8 +51,3 @@ management:
   endpoint:
     env:
       show-values: always
-
-  spring:
-  mvc:
-    problemdetails:
-      enabled: true

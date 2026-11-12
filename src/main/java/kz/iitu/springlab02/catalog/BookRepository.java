@@ -1,15 +1,25 @@
 package kz.iitu.springlab02.catalog;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
+
+    @Override
+    @EntityGraph(attributePaths = {"author"})
+    List<Book> findAll();
+
+    @Override
+    @EntityGraph(attributePaths = {"author"})
+    Page<Book> findAll(Pageable pageable);
+
     List<Book> findByGenre(Genre genre);
     List<Book> findByTitleContainingIgnoreCase(String fragment);
     List<Book> findByYearBetweenOrderByYearDesc(int from, int to);
@@ -25,8 +35,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("select b from Book b join fetch b.author")
     List<Book> findAllWithAuthor();
-
-    @Override
-    @EntityGraph(attributePaths = {"author"})
-    Page<Book> findAll(Pageable pageable);
 }

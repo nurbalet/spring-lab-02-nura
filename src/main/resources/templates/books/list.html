@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}">Catalogue</title>
@@ -21,7 +21,7 @@
     <tr th:each="book : ${books}">
         <td><a th:href="@{/books/{id}(id=${book.id})}" th:text="${book.id}">1</a></td>
         <td th:text="${book.title}">Title</td>
-        <td th:text="${book.author}">Author</td>
+        <td th:text="${book.author != null ? book.author.name : 'Unknown'}">Author</td>
         <td th:text="${book.year}">2020</td>
         <td><a th:href="@{/books/{id}/edit(id=${book.id})}" th:text="#{book.edit}">Edit</a></td>
     </tr>

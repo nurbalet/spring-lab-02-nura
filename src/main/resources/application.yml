@@ -1,13 +1,18 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/springlab
+    url: jdbc:postgresql://localhost:5432/springlab?currentSchema=public
     username: springlab
     password: springlab
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        default_schema: public
+  flyway:
+    enabled: false
   mvc:
     problemdetails:
       enabled: true
@@ -26,9 +31,6 @@ app:
     retry-count: 3
     timeout: 5s
     enabled: true
-  security:
-    token-ttl: 30m
-    min-password-length: 8
   css:
     owner: "nura"
     group: "RWPSF 3305"
@@ -38,16 +40,3 @@ app:
       username: "test"
     security:
       enabled: false
-
-logging:
-  level:
-    kz.iitu: INFO
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,env,configprops,conditions
-  endpoint:
-    env:
-      show-values: always
